@@ -9,10 +9,123 @@
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <h1>Example Student's Assignment 1!</h1>
+    <h1>Assignment #1: Blink</h1>
     <div class="header">
-      <img src="red-panda.jpg" />
-      <p>Here is all the documentation for assignment 1!</p>
+      <img src="circuit.JPG" />
     </div>
+    <div class="schematic">
+      <br><br>
+      <h3>Schematic and Calculations</h3>
+       <img src="IMG_0040.jpg" />
+      <p> I decided to try adding a blue LED as a challenge.
+        I calculate the resistance for the green and yellow LEDs as 160, and 85 
+        for the blue. This makes sense, since blue requires a higher voltage and
+        therefore a lower resistor. To be safe, I rounded each number up for the 
+        resistor I ended up choosing: 220 for yellow/green, and 100 for blue.
+        I also experimented with a higher resistor to make the blue bulb a bit dimmer.
+        I recreated the circuit with a 1k resistor and you can see in the gif that the blue 
+        is slightly dim.
+      </p>
+    </div>
+    <div class="circuit">
+      <br><br>
+      <h3>Circuit</h3>
+      <img src="circuit.JPG" />
+      <p> I purposefully used a resistor that was too high for this 
+        iteration of the circuit, which is why the blue bulb is dimmed.
+      </p>
+      <br><br>
+    </div>
+    <div style="width:260px;max-width:100%;">
+      <div style="height:0;padding-bottom:86.15%;position:relative;"><iframe width="260" height="224" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameBorder="0" src="https://imgflip.com/embed/a87c9q"></iframe></div><p><a href="https://imgflip.com/gif/a87c9q">via Imgflip</a></p></div>
+    <br><br>
+    <div class="code"></div>
+      <h3>Firmware</h3>
+      <pre><code>
+        // the setup function to initalize all pins used in the circuit as outputs
+        void setup() {
+          // initialize pin 8 as an output
+          pinMode(8, OUTPUT);
+          // initialize pin 7 as an output
+          pinMode(7, OUTPUT);
+          // initialize pin 4 as an output
+          pinMode(4, OUTPUT);
+        }
+
+        //Sets up a loop that runs indefinitely
+        void loop() {
+          //Turn yellow LED (pin 7) on
+          digitalWrite(7, HIGH);  
+          //One second pause
+          delay(1000);  
+          //Turn yellow LED off                   
+          digitalWrite(7, LOW);   
+          //One second pause
+          delay(1000);  
+          //Turn green LED (pin 8) on
+          digitalWrite(8, HIGH);  
+          //One second pause
+          delay(1000);   
+          //Turn green LED (pin 8) off                
+          digitalWrite(8, LOW);   
+          //One second pause
+          delay(1000); 
+          //Turn blue LED (pin 4) on
+          digitalWrite(4, HIGH);  
+          //One second pause
+          delay(1000);   
+          //Turn blue LED (pin 4) off                   
+          digitalWrite(4, LOW);   
+          //One second pause
+          delay(1000);        
+        }
+      </code></pre>
+    </div>
+    <div class="graph">
+      <br><br>
+      <h3>Additional Questions</h3>
+      <b>1: Draw a graph where the X axis is time and the 
+        Y axis is voltage across the LEDs. Draw a line for each of your 3 LEDs.</b>
+      <img src="IMG_0041.jpg" />
+      <p> Here is a graphical representation of each 
+        color-coded LED flashing in succession with one second in between each 
+        second-long flash. The voltage peaks and holds for a second for each LED,
+        before dropping for a second and repeating with the next LED
+      </p>
+    </div>
+     <div class="2">
+      <br><br>
+      <b>Q2: How many LEDs could you 
+        blink independently with your Arduino? How much current would that draw?
+      </b>
+      <p> You could blink 14 LEDs because there are 14 pins on the Arduino.
+        This would result in a current of .2Amps * 14 pins = 2.8 amps
+      <br><br>
+      <b>
+        4: How fast do you need to blink your 
+        LEDs until you no longer can tell that they are blinking?
+      </b>
+      <p>
+        I can't tell when they are blinking at 10ms.
+      </p>
+      <br><br>
+      <b>
+         Did you use AI tools in completing this assignment? If yes, please provide details on how/when, as well as a brief reflection. If no, you can either leave this question blank,
+        or provide other information if you'd like.
+      </b>
+      <p>
+        Yes, but I just used it to figure out how to add a line break in my HTML.
+        It told me to use the br tag which I have been using to help with 
+        formatting my HTML page. I didn't even intend to use AI, I just googled 
+        it and the gemini AI summary came up, describing how to add a line break.
+        Apart from that, I didn't use any AI tools.
+      </p>
+
+      
+      
+    </div>
+    
+    
   </body>
 </html>
+
