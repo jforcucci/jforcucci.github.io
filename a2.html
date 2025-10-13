@@ -9,10 +9,135 @@
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <h1>Example Student's Assignment 2!</h1>
+    <h1>Assignment #2: Fade</h1>
     <div class="header">
-      <img src="red-panda.jpg" />
-      <p>Here is all the documentation for assignment 2!</p>
+      <img src="a2circuitpic.jpg" />
     </div>
+    <div class="schematic">
+      <br><br>
+      <h3>Schematic and Calculations</h3>
+       <img src="circuitandcalcs.jpg" />
+      <p> I calculated a resistance of 160 ohms for the red and green LEDs
+        and 85 ohms for the blue LED. I rounded the resistor up to a 220 ohm resistor
+        for green and red, and 100 for blue.
+      </p>
+    </div>
+    <div class="circuit">
+      <br><br>
+      <h3>Circuit</h3>
+      <img src="a2circuitpic.jpg" />
+      <p> I purposefully used a resistor that was too high for this 
+        iteration of the circuit, which is why the blue bulb is dimmed.
+      </p>
+      <br><br>
+    </div>
+    <div style="width:260px;max-width:100%;"><div style="height:0;padding-bottom:93.08%;position:relative;"><iframe width="260" height="242" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameBorder="0" src="https://imgflip.com/embed/a8xgg0"></iframe></div><p><a 
+      href="https://imgflip.com/gif/a8xgg0">via Imgflip</a></p></div>
+=    <br><br>
+    <div class="code"></div>
+      <h3>Firmware</h3>
+      <pre><code>
+        // declaring button pin variable
+        const int buttonPin = 7;  
+        // declaring green LED pin
+        const int ledPin1 = 9;  
+        // declaring red LED pin  
+        const int ledPin2 = 10;
+        // declaring blue LED pin
+        const int ledPin3 = 11;
+        // declaring fade amount variable
+        int fadeAmount = 30;
+        // Setting brightness to zero
+        int brightness = 0;
+        // Creating an array containing the LED pins
+        int ledPins[] = {
+          9, 10, 11
+        }; 
+        // number of output pins                
+        int pinCount = 3;
+
+        // declaring variable to represent the button pin input
+        int buttonState = 0; 
+
+        void setup() {
+          // loop through LED pin array to initialize each pin as output
+          for (int thisPin = 0; thisPin < pinCount; thisPin++) {
+            pinMode(ledPins[thisPin], OUTPUT);
+          }
+          // initialize the pin connected to the button as input
+          pinMode(buttonPin, INPUT);
+        }
+
+        void loop() {
+          // set the variable to the status of the button (actively pressed vs. normal)
+          buttonState = digitalRead(buttonPin);
+
+          // See if button is pressed
+          if (buttonState == HIGH) {
+            // Loop through each pin
+            for (int thisPin = 0; thisPin < pinCount; thisPin++) {
+              // turn the pin on to the set brightness
+              digitalWrite(ledPins[thisPin], brightness);
+              // delay 300 ms
+              delay(300);
+              // turn the pin off:
+              digitalWrite(ledPins[thisPin], LOW);
+              
+              // add  "fade amount" to brightness
+              brightness = brightness + fadeAmount;
+
+              // if brightness is at its low or peak reverse direction of the fade
+              if (brightness <= 0 || brightness >= 255) {
+                fadeAmount = -fadeAmount;
+              }
+              // delay 100 ms
+              delay(100);
+            }
+
+          
+          } else {
+            // turn each LED off:
+            analogWrite(ledPin1, LOW);
+            analogWrite(ledPin2, LOW);
+            analogWrite(ledPin3, LOW);
+
+          }
+
+        }
+      </code></pre>
+    </div>
+    <div class="graph">
+      <br><br>
+      <h3>Additional Questions</h3>
+      <b>Q1: Draw a chart where the X axis is time and the Y axis is voltage. 
+        Draw 3 lines representing the voltage across an LED with analogWrite(led, 64), 
+        analogWrite(led, 128), and analogWrite(led, 255)..</b>
+      <img src="a2q1graph.jpg" />
+      <p> This chart demonstrates the voltage over time of the 25% vs. 50% vs. 100% duty cycles
+      </p>
+    </div>
+     <div class="2">
+      <br><br>
+      <b>Q2: Given your schematic, circuit, and firmware, assuming the only 
+        thing that draws current is your LEDs, how long would your circuit
+         run if powered by a 1200 mAh battery?
+      </b>
+      <p> It would run for approximately 80 hours. (See work below)
+        <img src="a2q2.jpg" />
+      <br><br>
+      <b>
+        Measure and record the actual voltage across one of your LEDs when it's on. 
+        How does this compare to the theoretical forward voltage for your LED color?
+      </b>
+      <p>
+        I measured my red LED forward voltage as 2.025 volts. Slightly higher
+        than the 1.8 V expected.
+      </p>
+      
+    </div>
+    
+    
   </body>
 </html>
+
+
