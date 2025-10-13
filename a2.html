@@ -11,7 +11,7 @@
   <body>
     <h1>Assignment #2: Fade</h1>
     <div class="header">
-      <img src="a2circuitpic.jpg" />
+      <img src="IMG_0456.jpg" />
     </div>
     <div class="schematic">
       <br><br>
@@ -25,85 +25,88 @@
     <div class="circuit">
       <br><br>
       <h3>Circuit</h3>
-      <img src="a2circuitpic.jpg" />
-      <p> I purposefully used a resistor that was too high for this 
-        iteration of the circuit, which is why the blue bulb is dimmed.
-      </p>
+      <img src="IMG_0456.jpg" />
+      <p> Here is an image of the edited circuit. I decided to use one RGB LED to 
+        simplify my circuit.
       <br><br>
     </div>
-    <div style="width:260px;max-width:100%;"><div style="height:0;padding-bottom:93.08%;position:relative;"><iframe width="260" height="242" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameBorder="0" src="https://imgflip.com/embed/a8xgg0"></iframe></div><p><a 
-      href="https://imgflip.com/gif/a8xgg0">via Imgflip</a></p></div>
-=    <br><br>
+    <div style="width:360px;max-width:100%;"><div style="height:0;padding-bottom:56.11%;position:relative;"><iframe width="360" height="202" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameBorder="0" src="https://imgflip.com/embed/a8zxt1"></iframe></div><p><a href="https://imgflip.com/gif/a8zxt1">via Imgflip</a></p></div>
+    <br><br>
     <div class="code"></div>
       <h3>Firmware</h3>
       <pre><code>
-        // declaring button pin variable
-        const int buttonPin = 7;  
-        // declaring green LED pin
-        const int ledPin1 = 9;  
-        // declaring red LED pin  
-        const int ledPin2 = 10;
-        // declaring blue LED pin
-        const int ledPin3 = 11;
-        // declaring fade amount variable
-        int fadeAmount = 30;
-        // Setting brightness to zero
-        int brightness = 0;
-        // Creating an array containing the LED pins
-        int ledPins[] = {
-          9, 10, 11
-        }; 
-        // number of output pins                
-        int pinCount = 3;
+        
 
-        // declaring variable to represent the button pin input
-        int buttonState = 0; 
+      // declaring button pin variable
+      const int buttonPin = 7;  
+      // declaring green LED pin
+      const int ledPin1 = 9;  
+      // declaring red LED pin  
+      const int ledPin2 = 10;
+      // declaring blue LED pin
+      const int ledPin3 = 11;
+      // declaring fade amount variable
+      int fadeAmount = 5;
+      // Setting brightness to zero
+      int brightness = 0;
+      // Creating an array containing the LED pins
+      int ledPins[] = {
+        9, 10, 11
+      }; 
+      // number of output pins                
+      int pinCount = 3;
 
-        void setup() {
-          // loop through LED pin array to initialize each pin as output
-          for (int thisPin = 0; thisPin < pinCount; thisPin++) {
-            pinMode(ledPins[thisPin], OUTPUT);
-          }
-          // initialize the pin connected to the button as input
-          pinMode(buttonPin, INPUT);
+      // declaring variable to represent the button pin input
+      int buttonState = 0; 
+
+      void setup() {
+        // loop through LED pin array to initialize each pin as output
+        for (int thisPin = 0; thisPin < pinCount; thisPin++) {
+          pinMode(ledPins[thisPin], OUTPUT);
         }
+        // initialize the pin connected to the button as input
+        pinMode(buttonPin, INPUT);
+      }
 
-        void loop() {
-          // set the variable to the status of the button (actively pressed vs. normal)
-          buttonState = digitalRead(buttonPin);
+      void loop() {
+        // set the variable to the status of the button (actively pressed vs. normal)
+        buttonState = digitalRead(buttonPin);
 
-          // See if button is pressed
-          if (buttonState == HIGH) {
-            // Loop through each pin
-            for (int thisPin = 0; thisPin < pinCount; thisPin++) {
-              // turn the pin on to the set brightness
-              digitalWrite(ledPins[thisPin], brightness);
-              // delay 300 ms
-              delay(300);
-              // turn the pin off:
-              digitalWrite(ledPins[thisPin], LOW);
-              
-              // add  "fade amount" to brightness
-              brightness = brightness + fadeAmount;
-
-              // if brightness is at its low or peak reverse direction of the fade
-              if (brightness <= 0 || brightness >= 255) {
-                fadeAmount = -fadeAmount;
-              }
-              // delay 100 ms
-              delay(100);
+        // See if button is pressed
+        if (buttonState == HIGH) {
+          // Loop through each pin
+          for (int thisPin = 0; thisPin < pinCount; thisPin++) {
+          
+            // Slowly brighten the LED in 5 ms increments by looping the brightness
+            for(int i = 0; i < 256;i++){
+              analogWrite(ledPins[thisPin], i);
+              delay(5);
+            }
+          
+            // Slowly brighten the LED in 5 ms increments by looping the brightness
+            for(int i = 255; i > 0;i--){
+              analogWrite(ledPins[thisPin], i);
+              delay(5);
             }
 
-          
-          } else {
-            // turn each LED off:
-            analogWrite(ledPin1, LOW);
-            analogWrite(ledPin2, LOW);
-            analogWrite(ledPin3, LOW);
+            // Slowly brighten the LED in 5 ms increments by looping the brightness
+            analogWrite(ledPins[thisPin], LOW);
+
+            // Delay 30 ms
+            delay(30);
 
           }
+            
+        
+        } else {
+          // Loop through LED array to turn each LED off:
+          for (int thisPin = 0; thisPin < pinCount; thisPin++) {
+          pinMode(ledPins[thisPin], LOW);
+        }
 
         }
+
+      }
       </code></pre>
     </div>
     <div class="graph">
