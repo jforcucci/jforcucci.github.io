@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Example Student's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Assignment #3: Input/Output</h1>
+    <div class="header">
+      <img src="IMG_0489.JPG" />
+    </div>
+    <div class="schematic">
+      <br><br>
+      <h3>Schematic and Calculations</h3>
+       <img src="a3 schematic.jpg" />
+      <p> I calculated a resistance of 160 ohms for the red and green LEDs
+        and 85 ohms for the blue LED. I rounded the resistor up to a 220 ohm resistor
+        for green and red, and 100 for blue. For the photocell and the thermistor, 
+        I used a 10kohm resistor, and confirmed this value with my multimeter. 
+      </p>
+    </div>
+    <div class="circuit">
+      <br><br>
+      <h3>Circuit</h3>
+      <img src="IMG_0489.JPG" />
+      <p> Here is the finished circuit. I decided to add an extra challenge 
+        by adding an additional sensor and connecing each 
+        sensor to different LEDs with different behaviors.
+        Here is a list of calculations I used to gauge 
+        voltage at each voltage divider:
+         <img src="a3 voltage calcs .jpg" />
+      <br><br>
+    </div>
+<div style="width:260px;max-width:100%;"><div style="height:0;padding-bottom:177.69%;position:relative;"><iframe width="260" height="462" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameBorder="0" src="https://imgflip.com/embed/a9mf2y"></iframe></div><p><a href="https://imgflip.com/gif/a9mf2y">via Imgflip</a></p></div>    
+<br><br>
+    <div class="code">
+      <h3>Firmware</h3>
+      <pre><code>
+        
+
+      // Initalize pin 1 as analog pin for the first sensor
+        const int analogPin0 = A0;
+        // Initalize pin 2 as analog pin for the second sensor
+        const int analogPin1 = A1;
+        // Pin 5 for the blue LED
+        const int ledPin0 = 5;
+        // Pin 3 for the green LED
+        const int ledPin1 = 3;
+
+
+
+        void setup() {
+
+        // setting up pin blue LED as output
+        pinMode(ledPin0, OUTPUT);
+
+        // setting up pin green LED as output
+        pinMode(ledPin1, OUTPUT);
+
+        // Setting up frequency for serial monitor
+        Serial.begin(9600);
+
+        }
+
+        // Creating variable for photocell output
+        int sensorValue0;
+
+        // Creating variable for thermistor output
+        int sensorValue1;
+
+        // Creating variable for mapped photocell output
+        int mappedValue0;
+
+        void loop() {
+
+        // Setting variable to value read from pin A0 (photocell output)
+        sensorValue0 = analogRead(analogPin0);
+
+        // Constrain variable from 400 - 830, the observed range of the photocell output
+        sensorValue0 = constrain(sensorValue0, 400, 830 );
+        
+        // Map photocell output to be in range of the LED, changing to the [0,255] range
+        mappedValue0 = map(sensorValue0, 400 , 830 , 0 , 255);
+
+        // Print mapped value
+        Serial.print("Mapped Value: ");
+        Serial.println(mappedValue0);
+
+        // Output mapped value to the blue LED
+        analogWrite(ledPin0, mappedValue0);
+
+        // Create a variable for the thermistor output from pin A1
+        int sensorValue1 = analogRead(analogPin1);
+
+        // Print the thermistor output
+        Serial.println(sensorValue1);
+
+        // If the thermistor output reads above 550, turn green off
+        if (sensorValue1 > 550) {
+            digitalWrite(ledPin1, LOW);
+        } else {
+            digitalWrite(ledPin1, HIGH);
+        }
+
+        }
+      </code></pre>
+    </div>
+    <div class="graph">
+      <br><br>
+      <h3>Additional Questions</h3>
+      <b>In your voltage divider, can the variable resistor
+        be either R1 or R2 or does it need to be one or the other? Justify your answer with example calculations.
+
+      </b>
+      <img src="q1 examplecalc.jpg" />
+      <p> As you can see by the calculations, they work both ways, but switching 
+            the variable resistor from R2 vs R1 changes the direction of the voltage
+            with increased resistance. One increases voltage with resistance, the 
+            other decreases voltage with resistance.
+      </p>
+    </div>
+     <div class="2">
+      <br><br>
+      <b>Draw a graph where the x-axis is time and the y-axis is voltage. 
+        Plot the voltage at V-measure of your voltage divider of your shared gif.
+      </b>
+      <p> Here is a graph of the voltage from a short clip of my circuit gif. As you can 
+        see, the green LED only switches from HIGH to LOW (5V to zero), while the blue 
+        LED can be in between. This was made possible by implementing the constrain function
+        and map function in my code. (See calculations above)
+        <img src="a3 graph.jpg" />
+      <br><br>
+      <b>
+        AnalogWrite and analogRead are respectively 8-bit and 10-bit values. 
+        Imagine you had 10-bit PWM and a 16-bit analog-to-digital converter instead. 
+        How would this change your map() code? Explain your answer.
+      </b>
+      <p>
+        When I mapped 10-bit (1024) and 8 bit (255) I used the following code:
+         <pre><code>
+         mappedValue0 = map(sensorValue0, 400 , 830 , 0 , 255);
+         </code></pre>
+        If we changed from 16 bit to 10 bit, we would be taking values up to 65536
+        and mapping them from a range of 0 to 1024. The resulting code would look like this
+        <pre><code>
+             mappedValue0 = map(sensorValue0, 0, 65536, 0, 1024)
+
+        </code></pre>
+      </p>
+      
+    </div>
+    
+    
+  </body>
+</html>
+
+
