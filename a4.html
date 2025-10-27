@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Example Student's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Assignment #4: Libraries</h1>
+    <div class="header">
+      <img src="a4circuit.jpg" />
+    </div>
+    <div class="schematic">
+      <br><br>
+      <h3>Schematic and Calculations</h3>
+       <img src="a4 schematic.jpeg" />
+      <p> 
+      </p>
+    </div>
+    <div class="circuit">
+      <br><br>
+      <h3>Circuit</h3>
+      <img src="a4circuit.jpg" />
+      <p> Here is the finished circuit. I decided to use two different sensors, each rotating the servo motor 
+        a different direction. 
+        </p>
+        
+      <br><br>
+    </div>
+<div style="width:260px;max-width:100%;"><div style="height:0;padding-bottom:177.69%;position:relative;"><iframe width="260" height="462" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameBorder="0" src="https://imgflip.com/embed/aaa2el"></iframe></div><p><a href="https://imgflip.com/gif/aaa2el">via Imgflip</a></p></div><br><br>
+    <div class="code">
+      <h3>Firmware</h3>
+      <pre><code>
+        
+        // Import the servo library
+        #include <Servo.h>
+        //Import the CapacitiveSensor library
+        #include <CapacitiveSensor.h>
+
+        #include <HCSR04.h>
+
+
+        /*
+        * CapitiveSense Library Demo Sketch
+        * Paul Badger 2008
+        * Uses a high value resistor e.g. 10M between send pin and receive pin
+        * Resistor effects sensitivity, experiment with values, 50K - 50M. Larger resistor values yield larger sensor values.
+        * Receive pin is the sensor pin - try different amounts of foil/metal on this pin
+        */
+
+        /* Sweep
+        by BARRAGAN <http://barraganstudio.com>
+        This example code is in the public domain.
+
+        modified 8 Nov 2013
+        by Scott Fitzgerald
+        https://www.arduino.cc/en/Tutorial/LibraryExamples/Sweep
+        */
+
+        // Create a Servo object from the library
+        Servo myservo; 
+
+        // Create a variable to track position
+        int pos = 0;
+
+
+        // Setup function for initializations
+        void setup() {
+        // Connect Servo to pin 9 on the Arduino
+        myservo.attach(9); 
+        // Establish the rate at which the serial monitor 
+        Serial.begin(9600);
+        }
+
+        // Connect capacitive sensor library to attach to pins 4 and 2
+        CapacitiveSensor cs_4_2 = CapacitiveSensor(4,2);  
+        // connect ultrasonic sensor to pins 12 and 13
+        UltraSonicDistanceSensor distanceSensor(12, 13);  
+
+
+
+        // main function running continuously
+        void loop() {
+
+        // variables to set up the capacitive sensor readings
+        long start = millis();
+        long total1 =  cs_4_2.capacitiveSensor(30);
+        
+
+        //print readings in milliseconds
+        Serial.print(millis() - start); 
+        //print tab      
+        Serial.print("\t");                    
+
+        //print capacitive sensor reading
+        Serial.println(total1); 
+        //print tab                  
+        Serial.print("\t");
+                    
+
+        // Create a float representing the distance sensed by the ultrasonic distance sensor
+        float distance = (distanceSensor.measureDistanceCm());
+        // wait 500 ms
+        delay(500);
+
+        // print the distance
+        Serial.println(distance);
+        
+
+        // if the ultrasonic sensor detects something within 10 cm, rotate the servo motor arm clockwise in increments of 5 degrees  
+        if (distance < 10 && distance > 0) {
+            for (pos = 90; pos >= 0; pos -= 5) { 
+            myservo.write(pos);              
+            delay(10); 
+            } 
+
+        }
+
+
+        
+        // if the capacitive sensor detects touch, rotate the servo motor arm counter-clockwise in increments of 5 degrees 
+
+        if (total1 > 100) {
+        for (pos = 0; pos <= 90; pos += 5) { // goes from 0 degrees to 180 degrees
+            // in steps of 1 degree
+            myservo.write(pos);            
+            delay(10); 
+            }                  
+        
+            
+        }
+
+        }
+
+      </code></pre>
+    </div>
+    <div class="graph">
+      <br><br>
+      <h3>Additional Questions</h3>
+      <b>I1: Say you are using a servo motor you attach to pin 9. In your loop() you have the following code:
+
+void loop() {
+for (pos = 0; pos <= 180; pos += 1) {
+  myservo.write(pos); 
+  delay(100); 
+  }
+}
+Draw a graph with the x-axis as time and the y-axis as voltage at pin 9 with respect to ground.
+
+      </b>
+      <img src="IMG_4D45CE3588EF-1.jpeg" />
+      <p> For a servo motor, voltage is not directly correlated to position, instead, it uses pulse-width modulation with pulses every 20 ms, lasting approximately 1-2 ms (Sparkfun). Due to this, the voltage would only alternate between HIGH (5V) and LOW (0V). Based on the documentation from the Sparkfun, pulses increase from 1 ms length to 2 ms length as the angle increases, resulting in this graph. 
+        (Source: https://learn.sparkfun.com/tutorials/hobby-servo-tutorial) 
+      </p>
+    </div>
+     <div class="2">
+      <br><br>
+      <b>2: Your input device is slightly broken, leading it to give us an erroneous reading 1% of the time. How can we address this? Answer in (pseudo)code.
+      </b>
+      <p> 2. In this case, we can get rid of the outliers with the following pseudocode:
+
+        As we read sensor values, check if each one is within range of 2.5x the previous value
+
+        If it isn’t, continue with the readings,
+
+        if its not, remove the outliers by assigning the value to the previous value
+        
+      <br><br>
+      <b>
+        3: Your input device is slightly noisy, leading the measurement to randomly deviate from the true measurement up or down by 10%. How can we address this? Answer in (pseudo)code.
+
+        </b>
+      <p>
+        1. We can “smooth the data by averaging over a number of readings. We can do this by:
+
+        Record 15 sensor readings 
+
+        reset the sensor value to the average of the previous 15 readings (past 15 readings/ 15)
+      </p>
+      
+    </div>
+    
+    
+  </body>
+</html>
+
+
